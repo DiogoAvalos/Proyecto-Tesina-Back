@@ -6,44 +6,10 @@ services:
     ports:
       - "8000:80"
 
-  citas:
-    container_name: citas
-    image: citas
-    build: ms_citas/.
-    env_file:
-      - .env
-
   especialidad:
     container_name: especialidad
     image: especialidad
     build: ms_especialidad/.
-    env_file:
-      - .env
-  parentesco:
-    container_name: ms_parentesco
-    image: parentesco
-    build: ms_parentesco/.
-    env_file:
-      - .env
-
-  medico:
-    container_name: medico
-    image: medico
-    build: ms_medico/.
-    env_file:
-      - .env
-
-  consultorio:
-    container_name: consultorio
-    image: consultorio
-    build: ms_consultorio/.
-    env_file:
-      - .env
-
-  historia:
-    container_name: historia
-    image: historia
-    build: ms_historia/.
     env_file:
       - .env
 
@@ -51,61 +17,5 @@ services:
     container_name: seguridad
     image: seguridad
     build: ms_seguridad/.
-    env_file:
-      - .env
-
-  email:
-    container_name: email
-    image: email
-    build: ms_mailsend/.
-    env_file:
-      - .env
-
-  turno:
-    container_name: turno
-    image: turno
-    build: ms_turno/.
-    env_file:
-      - .env
-
-  programacionxmedico:
-    container_name: programacionxmedico
-    image: programacionxmedico
-    build: ms_programacionxmedico/.
-    env_file:
-      - .env
-
-  medicoxespecialidad:
-    container_name: medicoxespecialidad
-    image: medicoxespecialidad
-    build: ms_medicoespecialidad/.
-    env_file:
-      - .env
-
-  citaxusuario:
-    container_name: citaxusuario
-    image: citaxusuario
-    build: ms_citaxusuario/.
-    env_file:
-      - .env
-
-  usuariorelacion:
-    container_name: usuariorelacion
-    image: usuariorelacion
-    build: ms_usuariorelacion/.
-    env_file:
-      - .env
-
-  citaxfecha:
-    container_name: citaxfecha
-    image: citaxfecha
-    build: ms_citaxfecha/.
-    env_file:
-      - .env
-
-  obtenerusuario:
-    container_name: obtenerusuario
-    image: obtenerusuario
-    build: ms_obtenerusuario/.
     env_file:
       - .env

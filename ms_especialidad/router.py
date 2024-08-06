@@ -4,9 +4,8 @@ from typing import List
 from .db import get_db
 from .models import Especialidad
 from .schema import EspecialidadOut
-from .tokenJwt import Validacion
 
-router = APIRouter(tags=['Citas'],route_class=Validacion)
+router = APIRouter(tags=['Citas'])
 
 @router.get("/especialidades", response_model=List[EspecialidadOut])
 def listar_medicos(db: Session = Depends(get_db)):
