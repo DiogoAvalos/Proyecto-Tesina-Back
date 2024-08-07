@@ -3,6 +3,7 @@ from .db import Base
 
 class Usuario(Base):
     __tablename__ = 'usuario'
+    __table_args__ = {'schema': 'public'} 
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String, unique=True, index=True, nullable=False)
     nombres = Column(String, nullable=False)

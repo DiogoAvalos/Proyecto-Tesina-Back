@@ -3,6 +3,7 @@ from .db import Base
 
 class Especialidad(Base):
     __tablename__ = 'especialidad'
+    __table_args__ = {'schema': 'public'}
 
     id = Column(Integer, primary_key=True)
     descripcion = Column(String, nullable=True)
