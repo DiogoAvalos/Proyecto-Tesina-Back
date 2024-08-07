@@ -4,7 +4,7 @@ services:
     image: nginx:alpine
     build: ms_apigateway/.
     ports:
-      - "8000:80"
+      - 8000:80
 
   especialidad:
     container_name: especialidad
