@@ -11,8 +11,9 @@ class UsuarioSchema(BaseModel):
     clave: str
     tipodoc: int
     numdoc: str
-    pais: str | None
-    ciudad: str | None
+    pais_id: str | None
+    departamento_id: str | None
+    distrito_id: str | None
     genero: str
     telefono: str | None
     fecha_creacion: date | None

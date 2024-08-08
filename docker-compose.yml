@@ -2,9 +2,16 @@ services:
   apigateway:
     container_name: apigateway
     image: nginx:alpine
-    build: ms_apigateway/.
+    build: apigateway/.
     ports:
       - 8000:80
+
+  ficheros:
+    container_name: ficheros
+    image: ficheros
+    build: ficheros/.
+    env_file:
+      - .env
 
   especialidad:
     container_name: especialidad
@@ -13,9 +20,11 @@ services:
     env_file:
       - .env
 
-  seguridad:
-    container_name: seguridad
-    image: seguridad
-    build: ms_seguridad/.
+  usuarios:
+    container_name: usuarios
+    image: usuarios
+    build: usuarios/.
     env_file:
       - .env
+    depends_on:
+      - ficheros
