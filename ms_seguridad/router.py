@@ -3,13 +3,22 @@ from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
 from .db import get_db
 from .models import Usuario
-from .schema import UsuarioBase
+from .schema import UsuarioSchema
 
 router = APIRouter(tags=['Usuario'])
 
-@router.get("/usuarios", response_model=List[UsuarioBase])
-def get_usuarios(db: Session = Depends(get_db)):
-    usuarios = db.query(Usuario).all()
-    if not usuarios:
-        raise HTTPException(status_code=404, detail="No users found")
-    return usuarios
+#* Trae al usuario por id
+@router.get("/usuarios/{id}", response_model=UsuarioSchema)
+def get_usuario(id: int, db: Session = Depends(get_db)):
+    usuario = db.query(Usuario).filter(Usuario.id == id).first()
+    if not usuario:
+        raise HTTPException(status_code=404, detail="User not found")
+    return UsuarioSchema.from_orm(usuario)
+
+@router.post("/usuarios", response_model=UsuarioSchema)
+def crear_usuario(usuario: UsuarioSchema, db: Session = Depends(get_db)):
+    db_usuario = UsuarioSchema(**usuario.dict())
+    db.add(db_usuario)
+    db.commit()
+    db.refresh(db_usuario)
+    return db_usuario

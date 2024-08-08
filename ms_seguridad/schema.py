@@ -1,7 +1,8 @@
 from pydantic import BaseModel
 from datetime import date 
 
-class UsuarioBase(BaseModel):
+class UsuarioSchema(BaseModel):
+    id: int
     username: str
     nombres: str
     apellidos: str
