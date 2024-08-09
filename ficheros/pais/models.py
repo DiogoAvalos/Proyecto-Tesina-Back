@@ -6,10 +6,11 @@ class Paises(Base):
     __table_args__= {'schema': 'public'}
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     iso = Column(CHAR(2), unique=True)
-    nombre = Column(String, nullable=False) 
+    nombre = Column(String, nullable=False)
 
 event.listen(Paises.__table__, 'after_create',
             DDL("""
+                INSERT INTO pais (id, iso, nombre) VALUES (173, 'PE', 'Perú');
                 INSERT INTO pais (id, iso, nombre) VALUES (1, 'AF', 'Afganistán');
                 INSERT INTO pais (id, iso, nombre) VALUES (2, 'AX', 'Islas Gland');
                 INSERT INTO pais (id, iso, nombre) VALUES (3, 'AL', 'Albania');
@@ -182,7 +183,6 @@ event.listen(Paises.__table__, 'after_create',
                 INSERT INTO pais (id, iso, nombre) VALUES (170, 'PA', 'Panamá');
                 INSERT INTO pais (id, iso, nombre) VALUES (171, 'PG', 'Papúa Nueva Guinea');
                 INSERT INTO pais (id, iso, nombre) VALUES (172, 'PY', 'Paraguay');
-                INSERT INTO pais (id, iso, nombre) VALUES (173, 'PE', 'Perú');
                 INSERT INTO pais (id, iso, nombre) VALUES (174, 'PN', 'Islas Pitcairn');
                 INSERT INTO pais (id, iso, nombre) VALUES (175, 'PF', 'Polinesia Francesa');
                 INSERT INTO pais (id, iso, nombre) VALUES (176, 'PL', 'Polonia');

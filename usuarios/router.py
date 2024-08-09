@@ -8,16 +8,14 @@ from .schema import UsuarioSchema
 router = APIRouter(tags=['Usuario'])
 
 #* Trae al usuario por id
-@router.get("/usuarios/{id}", response_model=UsuarioSchema)
-def get_usuario(id: int, db: Session = Depends(get_db)):
-    usuario = db.query(Usuario).filter(Usuario.id == id).first()
-    if not usuario:
-        raise HTTPException(status_code=404, detail="User not found")
-    return UsuarioSchema.from_orm(usuario)
+@router.get("/usuarios/", response_model=List[UsuarioSchema])
+def get_usuarios(db: Session = Depends(get_db)):
+    usuarios = db.query(Usuario).all()
+    return [UsuarioSchema.from_orm(usuario) for usuario in usuarios]
 
-@router.post("/usuarios", response_model=UsuarioSchema)
-def crear_usuario(usuario: UsuarioSchema, db: Session = Depends(get_db)):
-    db_usuario = UsuarioSchema(**usuario.dict())
+@router.post("/usuarios/", response_model=UsuarioSchema)
+def _(usuario: UsuarioSchema, db: Session = Depends(get_db)):
+    db_usuario = Usuario(**usuario.dict())
     db.add(db_usuario)
     db.commit()
     db.refresh(db_usuario)

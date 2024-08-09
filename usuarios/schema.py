@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from datetime import date 
 
 class UsuarioSchema(BaseModel):
-    id: int
+    id: int | None
     username: str
     nombres: str
     apellidos: str
@@ -16,7 +16,10 @@ class UsuarioSchema(BaseModel):
     distrito_id: str | None
     genero: str
     telefono: str | None
-    fecha_creacion: date | None
-    rol: str
+    #*fecha_creacion: date | None
+    rol: str | None
     activo: bool | None
     imagen_base64: str | None
+    
+    class Config:
+            orm_mode = True

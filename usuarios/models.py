@@ -18,7 +18,7 @@ class Usuario(Base):
     distrito_id = Column(String)
     genero = Column(String, nullable=False)
     telefono = Column(String)
-    fecha_creacion = Column(Date)
+    #*fecha_creacion = Column(Date)
     rol = Column(Integer)
     activo = Column(Boolean, server_default='true')
     imagen_base64 = Column(Text, nullable=True)
