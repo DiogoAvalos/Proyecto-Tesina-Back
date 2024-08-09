@@ -1,5 +1,11 @@
-from sqlalchemy import Column, Integer, String, Date, Boolean, Text
-from .db import Base
+from sqlalchemy import Column, Integer, String, Date, Boolean, Text, Table, ForeignKey
+from .db import Base, engine
+
+class Pais(Base):
+    __table__ = Table("pais", Base.metadata,autoload_with=engine,extend_existing=True)
+
+class TipoDoc(Base):
+    __table__ = Table("tipo_doc", Base.metadata,autoload_with=engine,extend_existing=True)
 
 class Usuario(Base):
     __tablename__ = 'usuario'
@@ -11,9 +17,9 @@ class Usuario(Base):
     email = Column(String, unique=True, index=True, nullable=False)
     birthdate = Column(Date, nullable=True)
     clave = Column( String, nullable=True)
-    tipodoc = Column(Integer, nullable=False)
+    tipodoc = Column(String, ForeignKey("tipo_doc.id"), nullable=False)
     numdoc = Column(String, nullable=False)
-    pais_id = Column(String)
+    pais_id = Column(Integer, ForeignKey("pais.id"))
     departamento_id = Column(String)
     distrito_id = Column(String)
     genero = Column(String, nullable=False)

@@ -9,7 +9,7 @@ class UsuarioSchema(BaseModel):
     email: str
     birthdate: date
     clave: str
-    tipodoc: int
+    tipodoc: str
     numdoc: str
     pais_id: str | None
     departamento_id: str | None
