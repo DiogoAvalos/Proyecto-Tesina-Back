@@ -28,3 +28,10 @@ services:
       - .env
     depends_on:
       - ficheros
+
+    seguridad:
+      container_name: seguridad
+      image: seguridad
+      build: seguridad/.
+      env_file:
+        - .env
