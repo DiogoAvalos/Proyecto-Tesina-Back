@@ -23,3 +23,7 @@ class UsuarioSchema(BaseModel):
     
     class Config:
             orm_mode = True
+
+class LoginForm(BaseModel):
+    username: str
+    password: str
