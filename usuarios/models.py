@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Date, Boolean, Text, Table, ForeignKey
+from sqlalchemy import Column, Integer, String, Date, Boolean, Text, Table, ForeignKey, ARRAY
 from .db import Base, engine
 
 class Pais(Base):
@@ -25,6 +25,6 @@ class Usuario(Base):
     genero = Column(String, nullable=False)
     telefono = Column(String)
     #*fecha_creacion = Column(Date)
-    rol = Column(Integer)
+    rol = Column(Integer) #ARRAY(String(50))
     activo = Column(Boolean, server_default='true')
     imagen_base64 = Column(Text, nullable=True)
