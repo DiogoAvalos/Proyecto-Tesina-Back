@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Date, Boolean, Text, Table, ForeignKey, event, DDL
+from sqlalchemy import Column, Integer, String, Date, Boolean, Table, ForeignKey, Text
 from .db import Base, engine
 
 class Pais(Base):

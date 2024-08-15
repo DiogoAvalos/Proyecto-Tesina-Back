@@ -1,5 +1,5 @@
 from typing import List
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, Body
 from sqlalchemy.orm import Session
 from datetime import timedelta
 from .db import get_db
@@ -55,3 +55,14 @@ def login(data: LoginForm, db: Session = Depends(get_db)):
             "activo": user.activo
             }
     }
+
+@router.put("/imagen/{user_id}", response_model=UsuarioSchema)
+def _(user_id: int, imagen_base64: str = Body(...), db: Session = Depends(get_db)):
+    db_usuario = db.query(Usuario).filter(Usuario.id == user_id).first()
+    if not db_usuario:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+    db_usuario.imagen_base64 = imagen_base64
+    db.commit()
+    db.refresh(db_usuario)
+    
+    return db_usuario
