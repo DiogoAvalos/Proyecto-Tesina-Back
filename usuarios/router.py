@@ -1,3 +1,4 @@
+from faker import Faker #* Test con datos de pruebas
 from typing import List
 from fastapi import APIRouter, HTTPException, Depends, Body
 from sqlalchemy.orm import Session
@@ -9,10 +10,21 @@ from .security import token, seguridad
 import os
 
 router = APIRouter(tags=['Usuario'])
+fake = Faker()
 
+# @router.get("/usuarios/", response_model=List[UsuarioSchema])
+# def get_usuarios(db: Session = Depends(get_db)):
+#     usuarios = db.query(Usuario).all()
+#     return [UsuarioSchema.from_orm(usuario) for usuario in usuarios]
+
+#* Endpoint de prueba
 @router.get("/usuarios/", response_model=List[UsuarioSchema])
 def get_usuarios(db: Session = Depends(get_db)):
     usuarios = db.query(Usuario).all()
+    if len(usuarios) < 10:
+        for _ in range(100 - len(usuarios)):
+            create_fake_user(db)
+        usuarios = db.query(Usuario).all()
     return [UsuarioSchema.from_orm(usuario) for usuario in usuarios]
 
 @router.post("/usuarios/", response_model=UsuarioSchema)
@@ -23,7 +35,6 @@ def create_usuario(usuario: UsuarioSchema, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(db_usuario)
     return db_usuario
-
 
 @router.post("/login")
 def login(data: LoginForm, db: Session = Depends(get_db)):
@@ -57,12 +68,40 @@ def login(data: LoginForm, db: Session = Depends(get_db)):
     }
 
 @router.put("/imagen/{user_id}", response_model=UsuarioSchema)
-def _(user_id: int, imagen_base64: str = Body(...), db: Session = Depends(get_db)):
+def update_imagen(user_id: int, imagen_base64: str = Body(...), db: Session = Depends(get_db)):
     db_usuario = db.query(Usuario).filter(Usuario.id == user_id).first()
     if not db_usuario:
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
     db_usuario.imagen_base64 = imagen_base64
     db.commit()
     db.refresh(db_usuario)
-    
+    return db_usuario
+
+def create_fake_user(db: Session):
+    fake_user = UsuarioSchema(
+        id=None,
+        username=fake.user_name(),
+        nombres=fake.first_name(),
+        apellidos=fake.last_name(),
+        email=fake.email(),
+        birthdate=fake.date_of_birth(),
+        clave="password",
+        tipodoc=1,
+        numdoc=fake.ssn(),
+        pais_id=1,
+        departamento=fake.state(),
+        distrito=fake.city(),
+        genero=fake.random_element(elements=('MASCULINO', 'FEMENINO')),
+        telefono=fake.phone_number(),
+        rol=1,
+        activo=True,
+        imagen_base64=None
+    )
+
+    hashed_password = seguridad.encriptar_clave(fake_user.clave)
+    db_usuario = Usuario(**fake_user.dict(exclude={"clave"}), clave=hashed_password)
+    db.add(db_usuario)
+    db.commit()
+    db.refresh(db_usuario)
+    print(f"Usuario falso creado: {db_usuario.username}")  # Print para depuración
     return db_usuario
