@@ -1,29 +1,15 @@
 from pydantic import BaseModel
 from datetime import date 
 
-class UsuarioSchema(BaseModel):
+class MedicoSchema(BaseModel):
     id: int | None
-    username: str
-    nombres: str
-    apellidos: str
-    email: str
-    birthdate: date
-    clave: str
-    tipodoc: str
-    numdoc: str
-    pais_id: str | None
-    departamento: str | None
-    distrito: str | None
-    genero: str
-    telefono: str | None
-    #*fecha_creacion: date | None
-    rol: str | None
+    nombre: str | None
+    apellido_p: str | None
+    apellido_m: str | None
+    tipodoc: int | None
+    numdoc: str | None
+    especialidad_id: int | None
     activo: bool | None
-    imagen_base64: str | None
     
     class Config:
             orm_mode = True
-
-class LoginForm(BaseModel):
-    username: str
-    password: str

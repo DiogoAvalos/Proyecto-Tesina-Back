@@ -1,10 +1,10 @@
-from sqlalchemy import Column, String, event, DDL, BOOLEAN
+from sqlalchemy import Column, String, event, DDL, BOOLEAN, Integer
 from ..db import Base
 
 class Especialidad(Base):
     __tablename__="especialidad"
     __table_args__= {'schema': 'public'}
-    id = Column(String, primary_key=True, unique=True, autoincrement=True)
+    id = Column(Integer, primary_key=True, unique=True, autoincrement=True)
     descripcion = Column(String)
     estado = Column(BOOLEAN)
 

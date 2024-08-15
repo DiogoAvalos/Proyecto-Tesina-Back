@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Date, Boolean, Text, Table, ForeignKey, ARRAY
+from sqlalchemy import Column, Integer, String, Date, Boolean, Text, Table, ForeignKey, event, DDL
 from .db import Base, engine
 
 class Pais(Base):
@@ -17,7 +17,7 @@ class Usuario(Base):
     email = Column(String, unique=True, index=True, nullable=False)
     birthdate = Column(Date, nullable=True)
     clave = Column( String, nullable=True)
-    tipodoc = Column(String, ForeignKey("tipo_doc.id"), nullable=False)
+    tipodoc = Column(Integer, ForeignKey("tipo_doc.id"), nullable=False)
     numdoc = Column(String, nullable=False)
     pais_id = Column(Integer, ForeignKey("pais.id"))
     departamento = Column(String)

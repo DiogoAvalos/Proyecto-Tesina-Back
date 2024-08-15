@@ -13,17 +13,19 @@ services:
     env_file:
       - .env
 
-  especialidad:
-    container_name: especialidad
-    image: especialidad
-    build: ms_especialidad/.
-    env_file:
-      - .env
-
   usuarios:
     container_name: usuarios
     image: usuarios
     build: usuarios/.
+    env_file:
+      - .env
+    depends_on:
+      - ficheros
+  
+  medicos:
+    container_name: medicos
+    image: medicos
+    build: medicos/.
     env_file:
       - .env
     depends_on:
