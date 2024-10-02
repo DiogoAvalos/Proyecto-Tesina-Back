@@ -8,6 +8,7 @@ from .models import Usuario
 from .schema import UsuarioSchema, LoginForm
 from .security import token, seguridad
 import os
+from .crud.crudBase import CrudBase
 
 router = APIRouter(tags=['Usuario'])
 fake = Faker()
@@ -34,7 +35,7 @@ def create_usuario(usuario: UsuarioSchema, db: Session = Depends(get_db)):
     db.add(db_usuario)
     db.commit()
     db.refresh(db_usuario)
-    return db_usuario
+    return { "message": "Se registró correctamente el usuario." }
 
 @router.post("/login")
 def login(data: LoginForm, db: Session = Depends(get_db)):
@@ -66,6 +67,11 @@ def login(data: LoginForm, db: Session = Depends(get_db)):
             "activo": user.activo
             }
     }
+
+@router.put("/{id}")
+async def _(id:str, usuarioSchema:UsuarioSchema, db:Session = Depends(get_db)):
+    await CrudBase(Usuario).put(db, usuarioSchema, id)
+    return {"message":"Se actualizo el usuario"}
 
 @router.put("/imagen/{user_id}", response_model=UsuarioSchema)
 def update_imagen(user_id: int, imagen_base64: str = Body(...), db: Session = Depends(get_db)):
