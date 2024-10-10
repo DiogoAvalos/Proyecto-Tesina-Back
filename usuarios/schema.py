@@ -11,7 +11,7 @@ class UsuarioSchema(BaseModel):
     clave: str
     tipodoc: str
     numdoc: str
-    pais_id: str | None
+    pais_id: int | None
     departamento: str | None
     distrito: str | None
     genero: str
@@ -19,7 +19,6 @@ class UsuarioSchema(BaseModel):
     #*fecha_creacion: date | None
     rol: str | None
     activo: bool | None
-    imagen_base64: str | None
     
     class Config:
             orm_mode = True
@@ -27,3 +26,8 @@ class UsuarioSchema(BaseModel):
 class LoginForm(BaseModel):
     username: str
     password: str
+
+
+class Imagen64(BaseModel):
+    user_id: int
+    imagen_base64: str | None

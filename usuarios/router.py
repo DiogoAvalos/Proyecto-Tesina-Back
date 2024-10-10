@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from datetime import timedelta
 from .db import get_db
 from .models import Usuario
-from .schema import UsuarioSchema, LoginForm
+from .schema import UsuarioSchema, LoginForm, Imagen64
 from .security import token, seguridad
 import os
 from .crud.crudBase import CrudBase
@@ -18,6 +18,7 @@ fake = Faker()
 #     usuarios = db.query(Usuario).all()
 #     return [UsuarioSchema.from_orm(usuario) for usuario in usuarios]
 
+
 #* Endpoint de prueba
 @router.get("/usuarios/", response_model=List[UsuarioSchema])
 def get_usuarios(db: Session = Depends(get_db)):
@@ -28,6 +29,8 @@ def get_usuarios(db: Session = Depends(get_db)):
         usuarios = db.query(Usuario).all()
     return [UsuarioSchema.from_orm(usuario) for usuario in usuarios]
 
+
+#* Crear registro de usuario
 @router.post("/usuarios/", response_model=UsuarioSchema)
 def create_usuario(usuario: UsuarioSchema, db: Session = Depends(get_db)):
     hashed_password = seguridad.encriptar_clave(usuario.clave)
@@ -37,6 +40,8 @@ def create_usuario(usuario: UsuarioSchema, db: Session = Depends(get_db)):
     db.refresh(db_usuario)
     return { "message": "Se registró correctamente el usuario." }
 
+
+#* Verificación de usuario
 @router.post("/login")
 def login(data: LoginForm, db: Session = Depends(get_db)):
     user = db.query(Usuario).filter(Usuario.username == data.username).first()
@@ -68,12 +73,16 @@ def login(data: LoginForm, db: Session = Depends(get_db)):
             }
     }
 
+
+#* Actualiza el registro del usuario
 @router.put("/{id}")
 async def _(id:str, usuarioSchema:UsuarioSchema, db:Session = Depends(get_db)):
     await CrudBase(Usuario).put(db, usuarioSchema, id)
-    return {"message":"Se actualizo el usuario"}
+    return {"message":"¡Se actualizo el usuario correctamente!"}
 
-@router.put("/imagen/{user_id}", response_model=UsuarioSchema)
+
+#* Actualiza la imagen del usuario
+@router.put("/imagen/{user_id}", response_model=Imagen64)
 def update_imagen(user_id: int, imagen_base64: str = Body(...), db: Session = Depends(get_db)):
     db_usuario = db.query(Usuario).filter(Usuario.id == user_id).first()
     if not db_usuario:
@@ -81,8 +90,10 @@ def update_imagen(user_id: int, imagen_base64: str = Body(...), db: Session = De
     db_usuario.imagen_base64 = imagen_base64
     db.commit()
     db.refresh(db_usuario)
-    return db_usuario
+    return Imagen64(user_id=db_usuario.id, imagen_base64=db_usuario.imagen_base64)
 
+
+#* Crea data fake si tiene menos de 10 registros
 def create_fake_user(db: Session):
     fake_user = UsuarioSchema(
         id=None,
