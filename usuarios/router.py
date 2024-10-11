@@ -1,6 +1,7 @@
 from faker import Faker #* Test con datos de pruebas
 from typing import List
 from fastapi import APIRouter, HTTPException, Depends, Body
+from pydantic import ValidationError
 from sqlalchemy.orm import Session
 from datetime import timedelta
 from .db import get_db
@@ -76,9 +77,14 @@ def login(data: LoginForm, db: Session = Depends(get_db)):
 
 #* Actualiza el registro del usuario
 @router.put("/{id}")
-async def _(id:str, usuarioSchema:UsuarioSchema, db:Session = Depends(get_db)):
-    await CrudBase(Usuario).put(db, usuarioSchema, id)
-    return {"message":"¡Se actualizo el usuario correctamente!"}
+async def update_usuario(id: str, usuarioSchema: UsuarioSchema, db: Session = Depends(get_db)):
+    try:
+        await CrudBase(Usuario).put(db, usuarioSchema, id)
+    except ValidationError as e:
+        raise HTTPException(status_code=422, detail=f"Error de formato: {e}")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"{str(e)}")
+    return {"message": "¡Se actualizó el usuario correctamente!"}
 
 
 #* Actualiza la imagen del usuario
@@ -108,7 +114,7 @@ def create_fake_user(db: Session):
         pais_id=1,
         departamento=fake.state(),
         distrito=fake.city(),
-        genero=fake.random_element(elements=('MASCULINO', 'FEMENINO')),
+        genero=fake.random_element(elements=('M', 'F')),
         telefono=fake.phone_number(),
         rol=1,
         activo=True,
