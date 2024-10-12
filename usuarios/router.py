@@ -46,8 +46,11 @@ def create_usuario(usuario: UsuarioSchema, db: Session = Depends(get_db)):
 @router.post("/login")
 def login(data: LoginForm, db: Session = Depends(get_db)):
     user = db.query(Usuario).filter(Usuario.username == data.username).first()
-    if not user or not seguridad.verificar_clave(data.password, user.clave):
-        raise HTTPException(status_code=401, detail="¡Nombre de usuario o contraseña incorrectos!")
+    if not user.activo:
+        raise HTTPException(status_code=403, detail="El usuario se encuentra inactivo, contacte con soporte.")
+    if not seguridad.verificar_clave(data.password, user.clave):
+        raise HTTPException(status_code=401, detail="¡Contraseña incorrecta!")
+    
     access_token_expires = timedelta(minutes=int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", 30)))
     access_token = token.create_access_token(data={"sub": user.username}, expires_delta=access_token_expires)
     return {
@@ -60,7 +63,7 @@ def login(data: LoginForm, db: Session = Depends(get_db)):
             "apellidos": user.apellidos,
             "imagen_base64": user.imagen_base64,
             "correo": user.email,
-            "birthdate": user.birthdate,
+            "fecha_nacimiento": user.fecha_nacimiento,
             "clave": user.clave,
             "tipodoc": user.tipodoc,
             "numdoc": user.numdoc,
@@ -71,7 +74,7 @@ def login(data: LoginForm, db: Session = Depends(get_db)):
             "telefono": user.telefono,
             "rol": user.rol,
             "activo": user.activo
-            }
+        }
     }
 
 
@@ -79,6 +82,8 @@ def login(data: LoginForm, db: Session = Depends(get_db)):
 @router.put("/{id}")
 async def update_usuario(id: str, usuarioSchema: UsuarioSchema, db: Session = Depends(get_db)):
     try:
+        if usuarioSchema.clave:
+            usuarioSchema.clave = seguridad.encriptar_clave(usuarioSchema.clave)
         await CrudBase(Usuario).put(db, usuarioSchema, id)
     except ValidationError as e:
         raise HTTPException(status_code=422, detail=f"Error de formato: {e}")
@@ -107,7 +112,7 @@ def create_fake_user(db: Session):
         nombres=fake.first_name(),
         apellidos=fake.last_name(),
         email=fake.email(),
-        birthdate=fake.date_of_birth(),
+        fecha_nacimiento=fake.date_of_birth(),
         clave="password",
         tipodoc=1,
         numdoc=fake.ssn(),

@@ -7,7 +7,7 @@ class UsuarioSchema(BaseModel):
     nombres: str
     apellidos: str
     email: str
-    birthdate: date
+    fecha_nacimiento: date | None
     clave: str
     tipodoc: str
     numdoc: str

@@ -2,7 +2,6 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .pais.router import router
 from .tipodocumento.router import tipodoc
-from .especialidad.router import especialidad
 from .db import Base, engine
 
 Base.metadata.create_all(bind=engine)
@@ -19,4 +18,3 @@ app.add_middleware(
 
 app.include_router(router)
 app.include_router(tipodoc)
-app.include_router(especialidad)

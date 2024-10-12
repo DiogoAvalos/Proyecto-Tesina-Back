@@ -15,7 +15,7 @@ class Usuario(Base):
     nombres = Column(String, nullable=False)
     apellidos = Column(String, nullable=False)
     email = Column(String, unique=True, index=True, nullable=False)
-    birthdate = Column(Date, nullable=True)
+    fecha_nacimiento = Column(Date, nullable=True)
     clave = Column( String, nullable=True)
     tipodoc = Column(Integer, ForeignKey("tipo_doc.id"), nullable=False)
     numdoc = Column(String, nullable=False)
