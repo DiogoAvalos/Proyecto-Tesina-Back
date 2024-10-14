@@ -5,9 +5,9 @@ from ..db import get_db
 from .models import Paises
 from .schema import PaisSchema
 
-router = APIRouter(prefix="/paises", tags=["Ficheros"])
+pais = APIRouter(prefix="/paises", tags=["Ficheros"])
 
-@router.get("/", response_model=List[PaisSchema])
+@pais.get("/", response_model=List[PaisSchema])
 def read_paises(db: Session = Depends(get_db)):
     try:
         paises = db.query(Paises).all()

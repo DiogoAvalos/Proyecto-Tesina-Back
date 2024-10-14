@@ -34,6 +34,9 @@ def get_usuarios(db: Session = Depends(get_db)):
 #* Crear registro de usuario
 @router.post("/usuarios/", response_model=UsuarioSchema)
 def create_usuario(usuario: UsuarioSchema, db: Session = Depends(get_db)):
+    existing_user = db.query(Usuario).filter(Usuario.username == usuario.username).first()
+    if existing_user:
+        raise HTTPException(status_code=400, detail="El usuario ya existe.")
     hashed_password = seguridad.encriptar_clave(usuario.clave)
     db_usuario = Usuario(**usuario.dict(exclude={"clave"}), clave=hashed_password)
     db.add(db_usuario)

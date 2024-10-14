@@ -3,14 +3,14 @@ from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 from datetime import date
 from .db import get_db
-from .models import Producto
+from .models import Producto, Productos
 from .schema import ProductoSchema
 
 router = APIRouter(tags=['Producto'], prefix="/producto" )
 
 @router.get("/", response_model=List[ProductoSchema])
 def get_productos(db: Session = Depends(get_db)):
-    listas = db.query(Producto).all()
+    listas = db.query(Productos).all()
     return [ProductoSchema.from_orm(lista) for lista in listas]
 
 # @router.get("/ventapormes")

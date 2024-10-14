@@ -11,3 +11,14 @@ class FamiliaSchema(BaseModel):
 
     class Config:
         orm_mode = True
+
+class SubFamiliaSchema(BaseModel):
+    id: int
+    familia_id: int
+    codigo_subfamilia: str
+    descripcion: str
+    creador: str | None
+    creacion: date | None
+
+    class Config:
+        orm_mode = True
