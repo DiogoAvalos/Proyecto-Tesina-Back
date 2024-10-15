@@ -42,7 +42,7 @@ class UserRole(Base):
     __tablename__ = 'user_role'
     __table_args__ = {'schema': 'public'}
     user_id = Column(Integer, ForeignKey('public.usuario.id'), primary_key=True)
-    role_id = Column(Integer, ForeignKey('rol.id'), primary_key=True)
+    role_id = Column(Integer, ForeignKey('public.rol.id'), primary_key=True)
     user = relationship('Usuario', back_populates='roles')
     role = relationship('Rol', back_populates='users')
 

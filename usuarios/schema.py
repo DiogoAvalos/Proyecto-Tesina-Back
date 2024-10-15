@@ -1,5 +1,6 @@
+from typing import List
 from pydantic import BaseModel
-from datetime import date 
+from datetime import date
 
 class UsuarioSchema(BaseModel):
     id: int | None
@@ -17,7 +18,7 @@ class UsuarioSchema(BaseModel):
     genero: str
     telefono: str | None
     #*fecha_creacion: date | None
-    rol: str | None
+    # rol: str | None
     activo: bool | None
     
     class Config:
@@ -33,12 +34,6 @@ class Imagen64(BaseModel):
     imagen_base64: str | None
 
 #TODO: Esquemas para las tablas de los menús y roles
-class RolSchema(BaseModel):
-    id: int
-    nombre_rol: str | None
-
-    class Config:
-        orm_mode = True
 
 class MenuItemSchema(BaseModel):
     id: int
@@ -52,6 +47,21 @@ class MenuItemSchema(BaseModel):
 class RoleMenuSchema(BaseModel):
     role_id: int
     menu_id: int
+
+    class Config:
+        orm_mode = True
+
+class RolSchema(BaseModel):
+    id: int
+    nombre_rol: str | None
+    accesos: List[MenuItemSchema]
+
+    class Config:
+        orm_mode = True
+
+class CreateRolSchema(BaseModel):
+    nombre_rol: str
+    accesos: List[int]
 
     class Config:
         orm_mode = True

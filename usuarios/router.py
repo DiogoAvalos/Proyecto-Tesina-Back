@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from datetime import timedelta
 from .db import get_db
 from .models import Usuario, Rol, MenuItems, RoleMenu
-from .schema import UsuarioSchema, LoginForm, Imagen64, RoleMenuSchema
+from .schema import UsuarioSchema, LoginForm, Imagen64, RoleMenuSchema, RolSchema, MenuItemSchema, CreateRolSchema
 from .security import token, seguridad
 import os
 from .crud.crudBase import CrudBase
@@ -71,7 +71,7 @@ def login(data: LoginForm, db: Session = Depends(get_db)):
             "distrito": user.distrito,
             "genero": user.genero,
             "telefono": user.telefono,
-            "rol": user.rol,
+            # "rol": user.rol,
             "activo": user.activo
         }
     }
@@ -120,7 +120,7 @@ def create_fake_user(db: Session):
         distrito=fake.city(),
         genero=fake.random_element(elements=('M', 'F')),
         telefono=fake.phone_number(),
-        rol=1,
+        # rol=1,
         activo=True,
         imagen_base64=None
     )
@@ -134,16 +134,45 @@ def create_fake_user(db: Session):
     return db_usuario
 
 #TODO: Router Menús y Roles
+#* Genera una lista de roles si es que tienen relaciones entre los menús
+@router.get("/listar-roles", response_model=List[RolSchema])
+def read_roles(db: Session = Depends(get_db)):
+    try:
+        roles = db.query(Rol).all()
+        roles_with_accesos = []
+        for role in roles:
+            accesos = []
+            for role_menu in role.menus:
+                menu_item = db.query(MenuItems).filter(MenuItems.id == role_menu.menu_id).first()
+                if menu_item:
+                    accesos.append(MenuItemSchema.from_orm(menu_item))
+            role_schema = RolSchema(id=role.id, nombre_rol=role.nombre_rol, accesos=accesos)
+            roles_with_accesos.append(role_schema)
+        return roles_with_accesos
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
-@router.get("/", response_model=List[RoleMenuSchema])
-def _(db: Session = Depends(get_db)):
-    menu_items = db.query(MenuItems).all()
-    if not menu_items:
-        raise HTTPException(status_code=404, detail="No se encontraron items de menú")
-    roles = db.query(Rol).all()
-    if not roles:
-        raise HTTPException(status_code=404, detail="No se encontraron roles")
-    role_menus = db.query(RoleMenu).all()
-    if not role_menus:
-        raise HTTPException(status_code=404, detail="No se encontraron roles relacionados con menús")
-    return role_menus
+
+#* Genera un rol y crea un registro en la tabla intermediaria
+@router.post("/crear-rol", response_model=RolSchema)
+def create_rol(rol: CreateRolSchema, db: Session = Depends(get_db)):
+    try:
+        nuevo_rol = Rol(nombre_rol=rol.nombre_rol)
+        db.add(nuevo_rol)
+        db.commit()
+        db.refresh(nuevo_rol)
+        for menu_id in rol.accesos:
+            nuevo_role_menu = RoleMenu(role_id=nuevo_rol.id, menu_id=menu_id)
+            db.add(nuevo_role_menu)
+        db.commit()
+        accesos = []
+        for role_menu in nuevo_rol.menus:
+            menu_item = db.query(MenuItems).filter(MenuItems.id == role_menu.menu_id).first()
+            if menu_item:
+                accesos.append(MenuItemSchema.from_orm(menu_item))
+        rol_schema = RolSchema(id=nuevo_rol.id, nombre_rol=nuevo_rol.nombre_rol, accesos=accesos)
+        return rol_schema
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
+
