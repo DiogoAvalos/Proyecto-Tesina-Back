@@ -5,8 +5,8 @@ from pydantic import ValidationError
 from sqlalchemy.orm import Session
 from datetime import timedelta
 from .db import get_db
-from .models import Usuario
-from .schema import UsuarioSchema, LoginForm, Imagen64
+from .models import Usuario, Rol, MenuItems, RoleMenu
+from .schema import UsuarioSchema, LoginForm, Imagen64, RoleMenuSchema
 from .security import token, seguridad
 import os
 from .crud.crudBase import CrudBase
@@ -14,13 +14,9 @@ from .crud.crudBase import CrudBase
 router = APIRouter(tags=['Usuario'])
 fake = Faker()
 
-# @router.get("/usuarios/", response_model=List[UsuarioSchema])
-# def get_usuarios(db: Session = Depends(get_db)):
-#     usuarios = db.query(Usuario).all()
-#     return [UsuarioSchema.from_orm(usuario) for usuario in usuarios]
+#TODO: Endpoints para el usuario
 
-
-#* Endpoint de prueba
+#* Endpoint para listar a todos los usuarios
 @router.get("/usuarios/", response_model=List[UsuarioSchema])
 def get_usuarios(db: Session = Depends(get_db)):
     usuarios = db.query(Usuario).all()
@@ -136,3 +132,18 @@ def create_fake_user(db: Session):
     db.refresh(db_usuario)
     print(f"Usuario falso creado: {db_usuario.username}")  # Print para depuración
     return db_usuario
+
+#TODO: Router Menús y Roles
+
+@router.get("/", response_model=List[RoleMenuSchema])
+def _(db: Session = Depends(get_db)):
+    menu_items = db.query(MenuItems).all()
+    if not menu_items:
+        raise HTTPException(status_code=404, detail="No se encontraron items de menú")
+    roles = db.query(Rol).all()
+    if not roles:
+        raise HTTPException(status_code=404, detail="No se encontraron roles")
+    role_menus = db.query(RoleMenu).all()
+    if not role_menus:
+        raise HTTPException(status_code=404, detail="No se encontraron roles relacionados con menús")
+    return role_menus

@@ -31,3 +31,27 @@ class LoginForm(BaseModel):
 class Imagen64(BaseModel):
     user_id: int
     imagen_base64: str | None
+
+#TODO: Esquemas para las tablas de los menús y roles
+class RolSchema(BaseModel):
+    id: int
+    nombre_rol: str | None
+
+    class Config:
+        orm_mode = True
+
+class MenuItemSchema(BaseModel):
+    id: int
+    label: str
+    icon: str
+    router_link: str
+
+    class Config:
+        orm_mode = True
+
+class RoleMenuSchema(BaseModel):
+    role_id: int
+    menu_id: int
+
+    class Config:
+        orm_mode = True
