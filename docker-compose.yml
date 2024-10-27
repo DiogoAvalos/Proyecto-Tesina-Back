@@ -1,77 +1,77 @@
 # TODO: Desarrollo
-# services:
-#   apigateway:
-#     container_name: apigateway
-#     image: nginx:alpine
-#     build: apigateway/.
-#     ports:
-#       - 8000:80
-
-#   ficheros:
-#     container_name: ficheros
-#     image: ficheros
-#     build: ficheros/.
-#     env_file:
-#       - .env
-
-#   usuarios:
-#     container_name: usuarios
-#     image: usuarios
-#     build: usuarios/.
-#     env_file:
-#       - .env
-#     depends_on:
-#       - ficheros
-  
-#   productos:
-#       container_name: productos
-#       image: productos
-#       build: productos/.
-#       env_file:
-#         - .env
-#       depends_on:
-#       - ficheros
-
-#TODO: Producción
-version: '3.8'  # Especifica la versión
-
 services:
   apigateway:
     container_name: apigateway
     image: nginx:alpine
-    build:
-      context: ./apigateway  # Cambia a la ruta correcta
+    build: apigateway/.
     ports:
-      - 8000:80  # Exponer el puerto 80 de Nginx en el puerto 8000 del host
+      - 8000:80
 
   ficheros:
     container_name: ficheros
-    image: ficheros  # Asegúrate de que esta imagen esté construida correctamente
-    build:
-      context: ./ficheros  # Cambia a la ruta correcta
+    image: ficheros
+    build: ficheros/.
     env_file:
       - .env
 
   usuarios:
     container_name: usuarios
-    image: usuarios  # Asegúrate de que esta imagen esté construida correctamente
-    build:
-      context: ./usuarios  # Cambia a la ruta correcta
+    image: usuarios
+    build: usuarios/.
     env_file:
       - .env
     depends_on:
       - ficheros
   
   productos:
-    container_name: productos
-    image: productos  # Asegúrate de que esta imagen esté construida correctamente
-    build:
-      context: ./productos  # Cambia a la ruta correcta
-    env_file:
-      - .env
-    depends_on:
+      container_name: productos
+      image: productos
+      build: productos/.
+      env_file:
+        - .env
+      depends_on:
       - ficheros
 
-networks:
-  default:
-    driver: bridge  # Asegúrate de que todos los servicios estén en la misma red
+# TODO: Producción
+# version: '3.8'  # Especifica la versión
+
+# services:
+#   apigateway:
+#     container_name: apigateway
+#     image: nginx:alpine
+#     build:
+#       context: ./apigateway  # Cambia a la ruta correcta
+#     ports:
+#       - 8000:80  # Exponer el puerto 80 de Nginx en el puerto 8000 del host
+
+#   ficheros:
+#     container_name: ficheros
+#     image: ficheros  # Asegúrate de que esta imagen esté construida correctamente
+#     build:
+#       context: ./ficheros  # Cambia a la ruta correcta
+#     env_file:
+#       - .env
+
+#   usuarios:
+#     container_name: usuarios
+#     image: usuarios  # Asegúrate de que esta imagen esté construida correctamente
+#     build:
+#       context: ./usuarios  # Cambia a la ruta correcta
+#     env_file:
+#       - .env
+#     depends_on:
+#       - ficheros
+  
+#   productos:
+#     container_name: productos
+#     image: productos  # Asegúrate de que esta imagen esté construida correctamente
+#     build:
+#       context: ./productos  # Cambia a la ruta correcta
+#     env_file:
+#       - .env
+#     depends_on:
+#       - ficheros
+
+# networks:
+#   default:
+#     driver: bridge  # Asegúrate de que todos los servicios estén en la misma red
