@@ -9,18 +9,18 @@ familia = APIRouter(prefix="/familia", tags=["Ficheros"])
 
 #* Familia GET
 @familia.get("/familia", response_model=List[FamiliaSchema])
-def read_paises(db: Session = Depends(get_db)):
+def get_familia(db: Session = Depends(get_db)):
     try:
-        paises = db.query(Familia).all()
-        return paises
+        familia = db.query(Familia).all()
+        return familia
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
 #* SubFamilia GET
 @familia.get("/subfamilia", response_model=List[SubFamiliaSchema])
-def read_paises(db: Session = Depends(get_db)):
+def get_subfamilia(db: Session = Depends(get_db)):
     try:
-        paises = db.query(SubFamilia).all()
-        return paises
+        subfamilia = db.query(SubFamilia).all()
+        return subfamilia
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

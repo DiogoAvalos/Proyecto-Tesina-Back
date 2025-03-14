@@ -1,4 +1,4 @@
-from sqlalchemy import CHAR, Column, Integer, String, event, DDL
+from sqlalchemy import Column, Integer, String, event, DDL, BOOLEAN
 from ..db import Base
 
 class TipoDoc(Base):
@@ -8,13 +8,14 @@ class TipoDoc(Base):
     cod_sunat = Column(String, unique=True)
     cod_corto = Column(String, unique=True)
     descripcion = Column(String)
+    activo = Column(BOOLEAN)
 
 event.listen(TipoDoc.__table__, 'after_create',
             DDL("""
-                INSERT INTO tipo_doc (cod_sunat, cod_corto, descripcion) VALUES ('0', 'OTROS', 'OTROS TIPOS DE DOCUMENTOS');
-                INSERT INTO tipo_doc (cod_sunat, cod_corto, descripcion) VALUES ('1', 'DNI', 'DOCUMENTO NACIONAL DE IDENTIDAD (DNI)');
-                INSERT INTO tipo_doc (cod_sunat, cod_corto, descripcion) VALUES ('4', 'CARNET', 'CARNET DE EXTRANJERIA');
-                INSERT INTO tipo_doc (cod_sunat, cod_corto, descripcion) VALUES ('6', 'RUC', 'REGISTRO ÚNICO DE CONTRIBUYENTES');
-                INSERT INTO tipo_doc (cod_sunat, cod_corto, descripcion) VALUES ('7', 'PAS', 'PASAPORTE');
-                INSERT INTO tipo_doc (cod_sunat, cod_corto, descripcion) VALUES ('A', 'CDI', 'CÉDULA DIPLOMÁTICA DE IDENTIDAD');
+                INSERT INTO tipo_doc (cod_sunat, cod_corto, descripcion, activo) VALUES ('0', 'OTROS', 'OTROS TIPOS DE DOCUMENTOS', true);
+                INSERT INTO tipo_doc (cod_sunat, cod_corto, descripcion, activo) VALUES ('1', 'DNI', 'DOCUMENTO NACIONAL DE IDENTIDAD (DNI)', true);
+                INSERT INTO tipo_doc (cod_sunat, cod_corto, descripcion, activo) VALUES ('4', 'CARNET', 'CARNET DE EXTRANJERIA', true);
+                INSERT INTO tipo_doc (cod_sunat, cod_corto, descripcion, activo) VALUES ('6', 'RUC', 'REGISTRO ÚNICO DE CONTRIBUYENTES', true);
+                INSERT INTO tipo_doc (cod_sunat, cod_corto, descripcion, activo) VALUES ('7', 'PAS', 'PASAPORTE', true);
+                INSERT INTO tipo_doc (cod_sunat, cod_corto, descripcion, activo) VALUES ('A', 'CDI', 'CÉDULA DIPLOMÁTICA DE IDENTIDAD', true);
         """))

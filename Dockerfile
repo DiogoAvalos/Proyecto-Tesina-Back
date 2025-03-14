@@ -2,7 +2,7 @@
 FROM python:3.10
 
 # Establece el directorio de trabajo
-WORKDIR /app
+WORKDIR /apigateway
 
 # Copia los archivos del proyecto
 COPY . .

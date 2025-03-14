@@ -8,7 +8,7 @@ from .schema import PaisSchema
 pais = APIRouter(prefix="/paises", tags=["Ficheros"])
 
 @pais.get("/", response_model=List[PaisSchema])
-def read_paises(db: Session = Depends(get_db)):
+def get_pais(db: Session = Depends(get_db)):
     try:
         paises = db.query(Paises).all()
         return paises
