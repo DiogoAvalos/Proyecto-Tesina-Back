@@ -8,7 +8,7 @@ from .schema import TipoDocSchema
 tipodoc = APIRouter(prefix="/tipodoc", tags=["Ficheros"])
 
 @tipodoc.get("/", response_model=List[TipoDocSchema])
-def _(db: Session = Depends(get_db)):
+def get_tipodoc(db: Session = Depends(get_db)):
     try:
         tipodoc = db.query(TipoDoc).all()
         return tipodoc

@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from datetime import date
 
 class FamiliaSchema(BaseModel):
-    id: int
+    id: int | None
     codigo_familia: str
     descripcion: str
     estado: bool | None

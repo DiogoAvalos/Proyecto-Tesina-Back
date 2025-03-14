@@ -20,7 +20,3 @@ class SubFamilia(Base):
     descripcion = Column(String)
     creador = Column(String)
     creacion = Column(Date)
-
-# event.listen(Familia.__table__, 'after_create',
-#             DDL("""
-#         """))
